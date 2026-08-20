@@ -1,3 +1,6 @@
+import Image from 'next/image'
+import logo from '../logo.png'
+
 const sports = [
   { name: 'Rugby', href: '/sports/rugby', image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1200&q=85', text: 'The original Manchester Select event — competitive rugby with a bigger purpose.' },
   { name: 'Football', href: '/sports/football', image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1200&q=85', text: 'Bring clubs, players and supporters together for something that matters.' },
@@ -5,7 +8,7 @@ const sports = [
 ]
 
 function Logo() {
-  return <a className="brand" href="/" aria-label="Manchester Select home"><img src="/logo.png" alt="Manchester Select" /></a>
+  return <a className="brand" href="/" aria-label="Manchester Select home"><Image src={logo} alt="Manchester Select" priority /></a>
 }
 
 export default function Home() {
