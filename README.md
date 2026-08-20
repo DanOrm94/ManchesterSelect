@@ -35,13 +35,14 @@ Set these as Cloudflare Pages encrypted environment variables/secrets:
 - `TURNSTILE_SECRET_KEY` — Cloudflare Turnstile secret key
 - `RESEND_API_KEY` — Resend API key
 - `CONTACT_TO_EMAIL` — inbox that should receive enquiries
+- `RESEND_FROM_EMAIL` — verified Resend sender, e.g. `Manchester Select <hello@your-domain.co.uk>`
 - `PUBLIC_TURNSTILE_SITE_KEY` — Turnstile site key, available at build time
 
-For production email, configure a verified sending domain in Resend and update the `from` address in the Pages Function.
+For production email, verify your sending domain in Resend and set `RESEND_FROM_EMAIL` to that verified address.
 
 ## Images
 
-The redesign uses the real Manchester Select assets already present in the repository for the logo, event photography and supporting imagery. The current implementation references the existing GitHub-hosted assets so the redesign does not introduce placeholder photography. For the final production setup, migrate the event images to Cloudflare Images or R2 and update the asset URLs without changing the page structure.
+The redesign uses the real Manchester Select assets already present in the repository for the logo, event photography and supporting imagery. The current implementation references those assets from the public GitHub repository so the redesign does not introduce placeholder photography. For the final production setup, migrate the event images to Cloudflare Images or R2 and update the asset URLs without changing the page structure.
 
 ## Cookie preferences
 
