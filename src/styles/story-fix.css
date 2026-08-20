@@ -1,0 +1,16 @@
+.story-grid > div:first-child h2 {
+  line-height: 1.04;
+  padding-bottom: 0.08em;
+}
+
+@media (max-width: 900px) {
+  .story-grid > div:first-child h2 {
+    line-height: 1.06;
+  }
+}
+
+@media (max-width: 560px) {
+  .story-grid > div:first-child h2 {
+    line-height: 1.08;
+  }
+}
