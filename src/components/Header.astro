@@ -1,13 +1,13 @@
 ---
 const logo = 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/logo.png';
+const isHome = Astro.url.pathname === '/';
 ---
-<header class="site-header" id="site-header">
-  <div class="announcement"><span>Sport for community.</span> Proud Sponsors of The Christie charity.</div>
+<header class:list={['site-header', { 'site-header-home': isHome }]} id="site-header">
   <nav class="nav-shell" aria-label="Main navigation">
     <a href="/" class="brand" aria-label="Manchester Select home"><img src={logo} alt="Manchester Select" /></a>
     <button class="menu-button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
     <div class="desktop-nav">
-      <a href="/#our-story">Our Story</a>
+      <a href="/our-story">Our Story</a>
       <a href="/#impact">Impact</a>
       <a href="/#events">Events</a>
       <a href="/#sponsorship">Sponsorship</a>
@@ -15,7 +15,7 @@ const logo = 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/l
     </div>
   </nav>
   <div id="mobile-menu" class="mobile-menu" hidden>
-    <a href="/#our-story">Our Story</a><a href="/#impact">Impact</a><a href="/#events">Events</a><a href="/#sponsorship">Sponsorship</a><a href="/#contact">Get Involved</a>
+    <a href="/our-story">Our Story</a><a href="/#impact">Impact</a><a href="/#events">Events</a><a href="/#sponsorship">Sponsorship</a><a href="/#contact">Get Involved</a>
   </div>
 </header>
 <script>
