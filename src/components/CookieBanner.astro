@@ -1,0 +1,14 @@
+<div id="cookie-banner" class="cookie-banner" hidden>
+  <div><strong>Cookies, your choice.</strong><p>We use essential cookies to run the site. Optional analytics and marketing cookies are off unless you choose them.</p></div>
+  <div class="cookie-actions"><button id="cookie-essential">Essential only</button><button id="cookie-settings">Settings</button><button id="cookie-accept">Accept optional</button></div>
+</div>
+<dialog id="cookie-dialog" class="cookie-dialog"><form method="dialog"><div class="cookie-dialog-card"><button class="dialog-close" value="close" aria-label="Close">×</button><h2>Cookie preferences</h2><label><input type="checkbox" checked disabled /> Essential <span>Always on</span></label><label><input id="cookie-statistics" type="checkbox" /> Statistics <span>Help us understand visits</span></label><label><input id="cookie-marketing" type="checkbox" /> Marketing <span>Only used for relevant campaigns</span></label><button id="cookie-save" class="button button-dark" value="save">Save preferences</button></div></form></dialog>
+<script>
+  const key='ms-cookie-preferences'; const banner=document.querySelector('#cookie-banner'); const dialog=document.querySelector('#cookie-dialog');
+  const saved=localStorage.getItem(key); if(!saved && banner) banner.hidden=false;
+  const save=(statistics=false,marketing=false)=>{localStorage.setItem(key,JSON.stringify({essential:true,statistics,marketing})); if(banner) banner.hidden=true;};
+  document.querySelector('#cookie-essential')?.addEventListener('click',()=>save());
+  document.querySelector('#cookie-accept')?.addEventListener('click',()=>save(true,true));
+  document.querySelector('#cookie-settings')?.addEventListener('click',()=>dialog?.showModal());
+  document.querySelector('#cookie-save')?.addEventListener('click',()=>save((document.querySelector('#cookie-statistics') as HTMLInputElement)?.checked,(document.querySelector('#cookie-marketing') as HTMLInputElement)?.checked));
+</script>
