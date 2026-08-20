@@ -1,0 +1,9 @@
+name = "manchester-select"
+compatibility_date = "2026-08-20"
+pages_build_output_dir = "./dist"
+
+[vars]
+# Configure these as encrypted Cloudflare Pages secrets in production:
+# TURNSTILE_SECRET_KEY
+# RESEND_API_KEY
+# CONTACT_TO_EMAIL
