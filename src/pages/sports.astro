@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+const raw='https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/';
+const sports=[
+  ['Rugby League','The sport that started it all. Charity matches, tournaments and the community that made Manchester Select possible.','event10.png','/our-story'],
+  ['Women’s Sport','More fixtures. More opportunities. Our women’s events help make Manchester Select a wider, more inclusive sporting community.','event5.png','/#contact'],
+  ['Football','New teams, new opportunities and another way for local people to use sport to support a cause that matters.','event7.png','/#contact'],
+  ['More to come','We want to welcome more sports, clubs and communities. If you have an idea for an event, we want to hear it.','teamphoto.png','/#contact'],
+];
+---
+<Layout title="Sports | Manchester Select" description="Manchester Select uses sport to bring people together, raise money for The Christie and build stronger communities.">
+  <section class="sport-hero"><div class="container"><div class="eyebrow">Sport for good</div><h1>More sports.<br/><span>More impact.</span></h1><p class="lead">Manchester Select started with rugby league. The next chapter is bigger — bringing different sports, teams and communities together to raise money for The Christie.</p></div></section>
+  <section class="section"><div class="container"><div class="section-head"><div><div class="eyebrow">Find your sport</div><h2>Everyone has a place here.</h2></div><p class="lead" style="max-width:400px">Whether you're a player, coach, supporter, volunteer or business, sport gives us a reason to get together and do something positive.</p></div><div class="sports-grid">{sports.map((sport,index)=><article class:list={['sport-card',index===0&&'sport-card-large']}><img src={raw+sport[2]} alt={sport[0]+' at Manchester Select'} loading="lazy"/><div class="sport-card-overlay"><div class="eyebrow">{index===0?'The original':index===3?'The future':'Manchester Select'}</div><h3>{sport[0]}</h3><p>{sport[1]}</p><a class="button button-accent" href={sport[3]}>{index===0?'Our story':index===3?'Get involved':'Get involved'}</a></div></article>)}</div></div></section>
+  <section class="impact-band section"><div class="container sports-purpose"><div><div class="eyebrow">The purpose</div><h2>Sport is the vehicle.<br/>Community is the engine.</h2></div><div><p class="lead" style="color:#d2dbe0">Every event is designed to do more than fill a fixture list. We want people to meet, play, support each other and help raise money for The Christie.</p><a class="button button-accent" href="/#contact">Bring your sport to Manchester Select</a></div></div></section>
+  <section class="section"><div class="container next-chapter"><div class="eyebrow">The next chapter</div><h2>We're only getting started.</h2><div class="chapter-grid"><div><strong>01</strong><h3>More events</h3><p>Build a calendar of sporting events that keep fundraising moving throughout the year.</p></div><div><strong>02</strong><h3>More sports</h3><p>Open Manchester Select to new sporting communities beyond rugby league.</p></div><div><strong>03</strong><h3>More people</h3><p>Give players, families, volunteers and businesses more ways to get involved.</p></div></div></div></section>
+</Layout>
