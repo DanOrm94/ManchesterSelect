@@ -4,9 +4,14 @@ const logo = 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/l
 <footer class="footer">
   <div class="container footer-grid">
     <div><img class="footer-logo" src={logo} alt="Manchester Select" /><p class="footer-copy">Sport with purpose. A Manchester charity bringing athletes, clubs, businesses and supporters together to raise money for The Christie.</p></div>
-    <div><h3>Explore</h3><a href="/#our-story">Our Story</a><a href="/#impact">Impact</a><a href="/#events">Events</a><a href="/#sponsorship">Sponsorship</a></div>
+    <div><h3>Explore</h3><a href="/sports">Sports</a><a href="/#our-story">Our Story</a><a href="/#impact">Impact</a><a href="/#events">Events</a><a href="/#sponsorship">Sponsorship</a></div>
     <div><h3>Policies</h3><a href="/privacy-cookies-policy">Privacy & Cookies</a><a href="/fundraising-policy">Fundraising Policy</a><a href="/volunteer-policy">Volunteer Policy</a></div>
-    <div><h3>Get involved</h3><a href="/#contact">Sponsor an event</a><a href="/#contact">Volunteer</a><a href="/#contact">Play for Manchester Select</a></div>
+    <div><h3>Get involved</h3><a href="/#contact">Sponsor an event</a><a href="/#contact">Volunteer</a><a href="/#contact">Play for Manchester Select</a><a href="/#contact">Bring a new sport</a></div>
   </div>
   <div class="container footer-bottom"><span>© 2026 Manchester Select</span><span>Sport for community. Sport for good.</span></div>
+  <a class="mobile-sticky-cta" href="/#contact">Support Manchester Select <span>→</span></a>
 </footer>
+<style>
+.mobile-sticky-cta{display:none}
+@media(max-width:700px){.mobile-sticky-cta{display:flex;position:fixed;z-index:45;left:12px;right:12px;bottom:12px;background:#d9f24f;color:#07121d;border-radius:999px;padding:13px 18px;align-items:center;justify-content:space-between;font-size:.8rem;font-weight:950;text-transform:uppercase;letter-spacing:.06em;box-shadow:0 12px 30px rgba(0,0,0,.18)}body{padding-bottom:70px}}
+</style>
