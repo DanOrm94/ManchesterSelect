@@ -2,6 +2,7 @@ interface Env {
   TURNSTILE_SECRET_KEY: string;
   RESEND_API_KEY: string;
   CONTACT_TO_EMAIL: string;
+  RESEND_FROM_EMAIL?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -25,7 +26,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) return new Response('Email delivery is not configured.', { status: 503 });
     const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST', headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: 'Manchester Select <onboarding@resend.dev>', to: [env.CONTACT_TO_EMAIL], reply_to: email, subject: `Manchester Select enquiry${tier ? ` — ${tier}` : ''}`, text: `Name: ${name}\nEmail: ${email}\nTier: ${tier || 'Not specified'}\n\n${message}` }),
+      body: JSON.stringify({ from: env.RESEND_FROM_EMAIL || 'Manchester Select <onboarding@resend.dev>', to: [env.CONTACT_TO_EMAIL], reply_to: email, subject: `Manchester Select enquiry${tier ? ` — ${tier}` : ''}`, text: `Name: ${name}\nEmail: ${email}\nTier: ${tier || 'Not specified'}\n\n${message}` }),
     });
     if (!emailResponse.ok) return new Response('Unable to send your enquiry right now.', { status: 502 });
     return new Response('Thanks — your enquiry has been sent.', { status: 200 });
