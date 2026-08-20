@@ -4,10 +4,14 @@ const sports = [
   { name: 'Netball', href: '/sports/netball', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=85', text: 'More sport. More voices. More opportunities to make an impact.' },
 ]
 
+function Logo() {
+  return <a className="brand" href="/" aria-label="Manchester Select home"><img src="/logo.png" alt="Manchester Select" /></a>
+}
+
 export default function Home() {
   return <main className="site">
     <div className="topbar">Sport for community. Sport for good.</div>
-    <nav className="nav"><a className="brand" href="/">MANCHESTER<span>SELECT</span></a><div className="navlinks"><a href="#sports">Sports</a><a href="#mission">Our mission</a><a href="#impact">Impact</a><a href="#involved">Get involved</a></div><a className="navcta" href="#involved">Support the cause</a><span className="navmobile">Menu</span></nav>
+    <nav className="nav"><Logo /><div className="navlinks"><a href="#sports">Sports</a><a href="#mission">Our mission</a><a href="#impact">Impact</a><a href="#involved">Get involved</a></div><a className="navcta" href="#involved">Support the cause</a><span className="navmobile">Menu</span></nav>
 
     <section className="hero"><div className="hero-inner"><div className="eyebrow">Manchester Select Charity</div><h1>More than a game.</h1><p className="hero-copy">Manchester Select uses the power of sport to bring people together, create unforgettable events and raise money for causes that matter across our community.</p><div className="actions"><a className="btn primary" href="#sports">Explore our sports</a><a className="btn" href="#mission">Why we do it</a></div></div></section>
 
@@ -19,6 +23,6 @@ export default function Home() {
 
     <section id="involved" className="red-panel"><div className="section"><div><div className="eyebrow" style={{color:'#111'}}>Be part of it</div><h2>Play. Partner. Give.</h2></div><div><p>Whether you are a player, supporter, local business, club or volunteer, there is a place for you at Manchester Select.</p><div className="actions"><a className="btn dark" href="mailto:hello@manchesterselectrl.co.uk">Get in touch</a><a className="btn dark" href="#sports">Explore events</a></div><div className="statline"><div><strong>Players</strong><span>Compete</span></div><div><strong>Partners</strong><span>Support</span></div><div><strong>Community</strong><span>Connect</span></div></div></div></div></section>
 
-    <footer className="footer"><div className="footer-inner"><div className="footer-grid"><div><div className="brand">MANCHESTER<span>SELECT</span></div><p>Sport with purpose. A Manchester charity creating opportunities, raising funds and bringing people together through sport.</p></div><div><h3>Explore</h3><p><a href="#sports">Sports</a><br/><a href="#mission">Our mission</a><br/><a href="#impact">Our impact</a></p></div><div><h3>Connect</h3><p><a href="mailto:hello@manchesterselectrl.co.uk">hello@manchesterselectrl.co.uk</a><br/><a href="#involved">Get involved</a></p></div></div><div className="footer-bottom"><span>© 2026 Manchester Select</span><span>Sport for community. Sport for good.</span></div></div></footer>
+    <footer className="footer"><div className="footer-inner"><div className="footer-grid"><div><Logo /><p>Sport with purpose. A Manchester charity creating opportunities, raising funds and bringing people together through sport.</p></div><div><h3>Explore</h3><p><a href="#sports">Sports</a><br/><a href="#mission">Our mission</a><br/><a href="#impact">Our impact</a></p></div><div><h3>Connect</h3><p><a href="mailto:hello@manchesterselectrl.co.uk">hello@manchesterselectrl.co.uk</a><br/><a href="#involved">Get involved</a></p></div></div><div className="footer-bottom"><span>© 2026 Manchester Select</span><span>Sport for community. Sport for good.</span></div></div></footer>
   </main>
 }
