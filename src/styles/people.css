@@ -1,0 +1,7 @@
+.people-grid article > span {
+  display: none;
+}
+
+.people-grid h3 {
+  margin-top: 0;
+}
