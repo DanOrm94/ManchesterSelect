@@ -1,0 +1,12 @@
+---
+const photos = ['event1.png','event2.png','event4.png','event5.png','event6.png','event7.png','event8.png','event9.png','event10.png','event11.png','event12.png'].map((name) => `https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/${name}`);
+---
+<div class="gallery" aria-label="Manchester Select event gallery">
+  {photos.map((photo, index) => <button type="button" data-gallery={photo} aria-label={`Open event photo ${index + 1}`}><img src={photo} alt={`Manchester Select event photo ${index + 1}`} loading={index > 3 ? 'lazy' : 'eager'} decoding="async" /></button>)}
+</div>
+<dialog id="gallery-dialog"><button class="dialog-close" aria-label="Close photo">×</button><img id="gallery-image" alt="Manchester Select event photo" /></dialog>
+<script>
+  const dialog=document.querySelector('#gallery-dialog') as HTMLDialogElement; const image=document.querySelector('#gallery-image') as HTMLImageElement;
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((button)=>button.addEventListener('click',()=>{image.src=button.dataset.gallery||'';dialog.showModal();}));
+  dialog?.addEventListener('click',(event)=>{if(event.target===dialog)dialog.close()}); document.querySelector('.dialog-close')?.addEventListener('click',()=>dialog.close());
+</script>
