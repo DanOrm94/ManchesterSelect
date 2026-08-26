@@ -7,3 +7,4 @@ pages_build_output_dir = "./dist"
 # TURNSTILE_SECRET_KEY
 # RESEND_API_KEY
 # CONTACT_TO_EMAIL
+# ZEFFY_API_KEY
