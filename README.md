@@ -37,8 +37,13 @@ Set these as Cloudflare Pages encrypted environment variables/secrets:
 - `CONTACT_TO_EMAIL` — inbox that should receive enquiries
 - `RESEND_FROM_EMAIL` — verified Resend sender, e.g. `Manchester Select <hello@your-domain.co.uk>`
 - `PUBLIC_TURNSTILE_SITE_KEY` — Turnstile site key, available at build time
+- `ZEFFY_API_KEY` — Zeffy public API key, kept server-side and used by `/events` to load live campaigns/events
 
 For production email, verify your sending domain in Resend and set `RESEND_FROM_EMAIL` to that verified address.
+
+## Upcoming events
+
+`/events` shows upcoming Manchester Select events from the Zeffy organisation account and links each event back to Zeffy for registration/tickets. Zeffy's current public API provides campaigns (including events) via `GET https://api.zeffy.com/api/v1/campaigns` and authenticates with an organisation API key.
 
 ## Images
 
@@ -51,6 +56,7 @@ The cookie banner is intentionally lightweight and stores essential/statistics/m
 ## Site structure
 
 - `/` — charity homepage, story, impact, events, gallery, sponsorship and contact
+- `/events` — live upcoming events from Zeffy
 - `/our-story` — founding story
 - `/privacy-cookies-policy`
 - `/fundraising-policy`
