@@ -65,6 +65,8 @@ const parseDate = (value?: string) => {
   return Number.isNaN(date.getTime()) ? null : date;
 };
 
+const getEventDate = (campaign: Campaign) => campaign.start_date || campaign.starts_at || campaign.end_date || campaign.ends_at;
+
 const getEvents = async (): Promise<Campaign[]> => {
   if (!apiKey) return manualEvents;
 
@@ -87,15 +89,26 @@ const getEvents = async (): Promise<Campaign[]> => {
   }
 
   const now = new Date();
-  return campaigns
+  const liveEvents = campaigns.filter((campaign) => {
+    const type = (campaign.type || '').toLowerCase();
+    const start = parseDate(campaign.start_date || campaign.starts_at);
+    const end = parseDate(campaign.end_date || campaign.ends_at);
+    return (!type || type.includes('event')) && (!end ? (!start || start >= now) : end >= now);
+  });
+
+  const combined = [...liveEvents, ...manualEvents];
+  const seen = new Set<string>();
+
+  return combined
     .filter((campaign) => {
-      const type = (campaign.type || '').toLowerCase();
-      const start = parseDate(campaign.start_date || campaign.starts_at || campaign.end_date || campaign.ends_at);
-      return (!type || type.includes('event')) && (!start || start >= now);
+      const key = campaign.id || campaign.url || campaign.campaign_url || campaign.slug || campaign.title || campaign.name || '';
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
     })
     .sort((a, b) => {
-      const aDate = parseDate(a.start_date || a.starts_at || a.end_date || a.ends_at)?.getTime() || Number.MAX_SAFE_INTEGER;
-      const bDate = parseDate(b.start_date || b.starts_at || b.end_date || b.ends_at)?.getTime() || Number.MAX_SAFE_INTEGER;
+      const aDate = parseDate(getEventDate(a))?.getTime() || Number.MAX_SAFE_INTEGER;
+      const bDate = parseDate(getEventDate(b))?.getTime() || Number.MAX_SAFE_INTEGER;
       return aDate - bDate;
     });
 };
