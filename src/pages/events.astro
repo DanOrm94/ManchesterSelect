@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 
 const zeffyUrl = 'https://www.zeffy.com/en-GB/organizations/manchester-select';
 const christieCupUrl = 'https://www.zeffy.com/en-GB/donation-form/christie-cup-donations';
+const christieCupImage = '/christie-cup.png';
 const apiBase = 'https://api.zeffy.com/api/v1';
 const apiKey = import.meta.env.ZEFFY_API_KEY || '';
 
@@ -112,7 +113,7 @@ const getLocation = (event: Campaign) => {
 
 const getUrl = (event: Campaign) => event.url || event.campaign_url || (event.slug ? `https://www.zeffy.com/en-GB/ticketing/${event.slug}` : zeffyUrl);
 const getTitle = (event: Campaign) => event.title || event.name || 'Manchester Select event';
-const getImage = (event: Campaign) => event.cover_image_url || event.image_url;
+const getImage = (event: Campaign) => event.cover_image_url || event.image_url || (event.id === manualChristieCup.id ? christieCupImage : undefined);
 ---
 
 <Layout
@@ -167,7 +168,7 @@ const getImage = (event: Campaign) => event.cover_image_url || event.image_url;
                   <strong>{parseDate(start)?.getDate() || '—'}</strong>
                   <small>{parseDate(start) ? new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(parseDate(start)!) : ''}</small>
                 </div>
-                {image ? <img src={image} alt="" loading="lazy" /> : <div class="image-placeholder">Manchester Select</div>}
+                {image ? <img src={image} alt={`${getTitle(event)} event artwork`} loading="lazy" /> : <div class="image-placeholder">Manchester Select</div>}
                 <div class="event-content">
                   <div class="event-meta">
                     <span>{formatDate(start)}</span>
