@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 const zeffyUrl = 'https://www.zeffy.com/en-GB/organizations/manchester-select';
 const christieCupUrl = 'https://www.zeffy.com/en-GB/donation-form/christie-cup-donations';
 const christieCupImage = '/christie-cup.png';
+const eventLogo = 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/logo.png';
 const apiBase = 'https://api.zeffy.com/api/v1';
 const apiKey = import.meta.env.ZEFFY_API_KEY || '';
 
@@ -135,7 +136,10 @@ const getLocation = (event: Campaign) => {
 
 const getUrl = (event: Campaign) => event.url || event.campaign_url || (event.slug ? `https://www.zeffy.com/en-GB/ticketing/${event.slug}` : zeffyUrl);
 const getTitle = (event: Campaign) => event.title || event.name || 'Manchester Select event';
-const getImage = (event: Campaign) => event.cover_image_url || event.image_url || (event.id === manualChristieCup.id ? christieCupImage : undefined);
+const getImage = (event: Campaign) => {
+  if (event.id === manualAdditionalEvents[0].id || event.id === manualAdditionalEvents[1].id) return eventLogo;
+  return event.cover_image_url || event.image_url || (event.id === manualChristieCup.id ? christieCupImage : undefined);
+};
 ---
 
 <Layout
