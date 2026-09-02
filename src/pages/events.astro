@@ -36,6 +36,26 @@ const manualChristieCup: Campaign = {
   location: 'Staley Cricket Club, SK15 3JJ',
 };
 
+const manualAdditionalEvents: Campaign[] = [
+  {
+    id: 'khusanov-shirt-manual',
+    title: 'Signed & Framed Khusanov Shirt with Certificate',
+    description: 'Win a signed and framed Khusanov shirt, complete with certificate.',
+    url: 'https://www.zeffy.com/en-GB/ticketing/signed-and-framed-khusanov-shirt-with-certificate',
+    type: 'event',
+  },
+  {
+    id: 'england-sri-lanka-green-room-manual',
+    title: 'England vs Sri Lanka ODI – Green Room x2',
+    description: 'Opportunity to attend England vs Sri Lanka in the Green Room with two places.',
+    url: 'https://www.zeffy.com/en-GB/ticketing/270926-england-vs-sri-lanka-odi-green-room-x2',
+    type: 'event',
+    start_date: '2026-09-27T00:00:00+01:00',
+  },
+];
+
+const manualEvents: Campaign[] = [manualChristieCup, ...manualAdditionalEvents];
+
 const parseDate = (value?: string) => {
   if (!value) return null;
   const date = new Date(value);
@@ -43,7 +63,7 @@ const parseDate = (value?: string) => {
 };
 
 const getEvents = async (): Promise<Campaign[]> => {
-  if (!apiKey) return [manualChristieCup];
+  if (!apiKey) return manualEvents;
 
   const headers = { Authorization: `Bearer ${apiKey}` };
   const campaigns: Campaign[] = [];
