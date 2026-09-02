@@ -2,6 +2,6 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://manchesterselect.co.uk',
+  site: 'https://mcrselect.co.uk',
   vite: { plugins: [tailwindcss()] },
 });
