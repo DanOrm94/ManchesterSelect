@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 
 const zeffyUrl = 'https://www.zeffy.com/en-GB/organizations/manchester-select';
+const christieCupUrl = 'https://www.zeffy.com/en-GB/donation-form/christie-cup-donations';
 const apiBase = 'https://api.zeffy.com/api/v1';
 const apiKey = import.meta.env.ZEFFY_API_KEY || '';
 
@@ -24,6 +25,15 @@ type Campaign = {
   location?: string | { name?: string; address?: string };
 };
 
+const manualChristieCup: Campaign = {
+  id: 'christie-cup-manual',
+  title: 'Christie Cup',
+  description: 'Support Manchester Select and The Christie through the Christie Cup.',
+  url: christieCupUrl,
+  type: 'event',
+  location: 'Manchester',
+};
+
 const parseDate = (value?: string) => {
   if (!value) return null;
   const date = new Date(value);
@@ -31,7 +41,7 @@ const parseDate = (value?: string) => {
 };
 
 const getEvents = async (): Promise<Campaign[]> => {
-  if (!apiKey) return [];
+  if (!apiKey) return [manualChristieCup];
 
   const headers = { Authorization: `Bearer ${apiKey}` };
   const campaigns: Campaign[] = [];
@@ -152,7 +162,7 @@ const getImage = (event: Campaign) => event.cover_image_url || event.image_url;
             return (
               <article class="live-event">
                 <div class="date-block">
-                  <span>{formatDate(start).split(' ')[0]}</span>
+                  <span>{start ? formatDate(start).split(' ')[0] : 'Next'}</span>
                   <strong>{parseDate(start)?.getDate() || '—'}</strong>
                   <small>{parseDate(start) ? new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(parseDate(start)!) : ''}</small>
                 </div>
