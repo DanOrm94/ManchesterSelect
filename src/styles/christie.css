@@ -1,0 +1,3 @@
+.christie-logo{overflow:hidden}
+.christie-logo img{transform:scale(2.3);transform-origin:center center;max-height:150px}
+@media(max-width:900px){.christie-logo img{transform:scale(2)}}
