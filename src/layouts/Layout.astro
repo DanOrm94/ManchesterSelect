@@ -1,10 +1,12 @@
 ---
-import '../styles/global.css';
-import '../styles/story-fix.css';
-import '../styles/people.css';
+import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
+import '../styles/global.css';
+import '../styles/story-fix.css';
+import '../styles/people.css';
+import '../styles/christie.css';
 const { title = 'Manchester Select | Sport for good', description = 'Manchester Select brings people together through rugby league and community events to raise money for The Christie.' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, 'https://mcrselect.co.uk');
 ---
