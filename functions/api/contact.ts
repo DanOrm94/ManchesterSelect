@@ -1,8 +1,8 @@
 interface Env {
   TURNSTILE_SECRET_KEY: string;
-  BREVO_API_KEY: string;
+  RESEND_API_KEY: string;
   CONTACT_TO_EMAIL: string;
-  BREVO_FROM_EMAIL?: string;
+  RESEND_FROM_EMAIL?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -37,29 +37,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       return new Response('Security verification failed.', { status: 403 });
     }
 
-    if (!env.BREVO_API_KEY || !env.CONTACT_TO_EMAIL) {
+    if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) {
       return new Response('Email delivery is not configured.', { status: 503 });
     }
 
-    const fromEmail = env.BREVO_FROM_EMAIL || 'info@mcrselect.co.uk';
+    const fromEmail = env.RESEND_FROM_EMAIL || 'info@mcrselect.co.uk';
 
-    const emailResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const emailResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'api-key': env.BREVO_API_KEY,
+        'Authorization': `Bearer ${env.RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        sender: {
-          name: 'Manchester Select',
-          email: fromEmail,
-        },
-        to: [{ email: env.CONTACT_TO_EMAIL }],
-        replyTo: {
-          email,
-        },
+        from: `Manchester Select <${fromEmail}>`,
+        to: [env.CONTACT_TO_EMAIL],
+        reply_to: email,
         subject: `Manchester Select enquiry${tier ? ` — ${tier}` : ''}`,
-        textContent: `Name: ${name}\nEmail: ${email}\nTier: ${tier || 'Not specified'}\n\n${message}`,
+        text: `Name: ${name}\nEmail: ${email}\nTier: ${tier || 'Not specified'}\n\n${message}`,
       }),
     });
 
