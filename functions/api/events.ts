@@ -82,7 +82,7 @@ const dedupeAndSort = (campaigns: Campaign[]) => {
   const seen = new Set<string>();
   return campaigns
     .filter((campaign) => {
-      const key = campaign.id || campaign.url || campaign.campaign_url || campaign.slug || campaign.title || campaign.name || '';
+      const key = getUrl(campaign) || campaign.id || campaign.slug || campaign.title || campaign.name || '';
       if (!key || seen.has(key)) return false;
       seen.add(key);
       return true;
