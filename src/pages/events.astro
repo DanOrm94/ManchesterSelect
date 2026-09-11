@@ -5,8 +5,6 @@ const zeffyUrl = 'https://www.zeffy.com/en-GB/organizations/manchester-select';
 const christieCupUrl = 'https://www.zeffy.com/en-GB/donation-form/christie-cup-donations';
 const christieCupImage = '/christie-cup.png';
 const eventLogo = 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/logo.png';
-const apiBase = 'https://api.zeffy.com/api/v1';
-const apiKey = import.meta.env.ZEFFY_API_KEY || '';
 
 type Campaign = {
   id?: string;
@@ -17,7 +15,6 @@ type Campaign = {
   url?: string;
   campaign_url?: string;
   type?: string;
-  status?: string;
   start_date?: string;
   end_date?: string;
   starts_at?: string;
@@ -27,17 +24,17 @@ type Campaign = {
   location?: string | { name?: string; address?: string };
 };
 
-const manualChristieCup: Campaign = {
-  id: 'christie-cup-manual',
-  title: 'Christie Cup',
-  description: 'Cricket T20 match supporting The Christie Charity. Family fun day with live DJ, bouncy castle and artisan stalls.',
-  url: christieCupUrl,
-  type: 'event',
-  start_date: '2026-09-13T11:00:00+01:00',
-  location: 'Staley Cricket Club, SK15 3JJ',
-};
-
-const manualAdditionalEvents: Campaign[] = [
+const manualEvents: Campaign[] = [
+  {
+    id: 'christie-cup-manual',
+    title: 'Christie Cup',
+    description: 'Cricket T20 match supporting The Christie Charity. Family fun day with live DJ, bouncy castle and artisan stalls.',
+    url: christieCupUrl,
+    type: 'event',
+    start_date: '2026-09-13T11:00:00+01:00',
+    location: 'Staley Cricket Club, SK15 3JJ',
+    cover_image_url: christieCupImage,
+  },
   {
     id: 'khusanov-shirt-manual',
     title: 'Signed & Framed Khusanov Shirt with Certificate',
@@ -46,6 +43,7 @@ const manualAdditionalEvents: Campaign[] = [
     type: 'event',
     start_date: '2026-08-25T16:00:00+01:00',
     end_date: '2026-09-13T16:00:00+01:00',
+    cover_image_url: eventLogo,
   },
   {
     id: 'england-sri-lanka-green-room-manual',
@@ -54,74 +52,15 @@ const manualAdditionalEvents: Campaign[] = [
     url: 'https://www.zeffy.com/en-GB/ticketing/270926-england-vs-sri-lanka-odi-green-room-x2',
     type: 'event',
     start_date: '2026-09-27T00:00:00+01:00',
+    cover_image_url: eventLogo,
   },
 ];
-
-const manualEvents: Campaign[] = [manualChristieCup, ...manualAdditionalEvents];
 
 const parseDate = (value?: string) => {
   if (!value) return null;
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
 };
-
-const getEventDate = (campaign: Campaign) => campaign.start_date || campaign.starts_at || campaign.end_date || campaign.ends_at;
-
-const getEvents = async (): Promise<Campaign[]> => {
-  if (!apiKey) return manualEvents;
-
-  const headers = { Authorization: `Bearer ${apiKey}` };
-  const campaigns: Campaign[] = [];
-  let cursor = '';
-
-  for (let page = 0; page < 10; page += 1) {
-    const url = new URL(`${apiBase}/campaigns`);
-    if (cursor) url.searchParams.set('cursor', cursor);
-    const response = await fetch(url, { headers });
-    if (!response.ok) throw new Error(`Zeffy API returned ${response.status}`);
-
-    const payload = await response.json();
-    const batch = Array.isArray(payload) ? payload : payload.data || payload.campaigns || [];
-    campaigns.push(...batch);
-
-    if (!payload.has_more || !payload.next_cursor) break;
-    cursor = payload.next_cursor;
-  }
-
-  const now = new Date();
-  const liveEvents = campaigns.filter((campaign) => {
-    const type = (campaign.type || '').toLowerCase();
-    const start = parseDate(campaign.start_date || campaign.starts_at);
-    const end = parseDate(campaign.end_date || campaign.ends_at);
-    return (!type || type.includes('event')) && (!end ? (!start || start >= now) : end >= now);
-  });
-
-  const combined = [...liveEvents, ...manualEvents];
-  const seen = new Set<string>();
-
-  return combined
-    .filter((campaign) => {
-      const key = campaign.id || campaign.url || campaign.campaign_url || campaign.slug || campaign.title || campaign.name || '';
-      if (!key || seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    })
-    .sort((a, b) => {
-      const aDate = parseDate(getEventDate(a))?.getTime() || Number.MAX_SAFE_INTEGER;
-      const bDate = parseDate(getEventDate(b))?.getTime() || Number.MAX_SAFE_INTEGER;
-      return aDate - bDate;
-    });
-};
-
-let events: Campaign[] = [];
-let errorMessage = '';
-
-try {
-  events = await getEvents();
-} catch (error) {
-  console.error(error);
-  errorMessage = 'We could not load the live event list right now.';
-}
 
 const formatDate = (value?: string) => {
   const date = parseDate(value);
@@ -149,10 +88,7 @@ const getLocation = (event: Campaign) => {
 
 const getUrl = (event: Campaign) => event.url || event.campaign_url || (event.slug ? `https://www.zeffy.com/en-GB/ticketing/${event.slug}` : zeffyUrl);
 const getTitle = (event: Campaign) => event.title || event.name || 'Manchester Select event';
-const getImage = (event: Campaign) => {
-  if (event.id === manualAdditionalEvents[0].id || event.id === manualAdditionalEvents[1].id) return eventLogo;
-  return event.cover_image_url || event.image_url || (event.id === manualChristieCup.id ? christieCupImage : undefined);
-};
+const getImage = (event: Campaign) => event.cover_image_url || event.image_url || (event.id === manualEvents[0].id ? christieCupImage : eventLogo);
 ---
 
 <Layout
@@ -182,47 +118,33 @@ const getImage = (event: Campaign) => {
         <p class="lead">Sport, community and fundraising — with tickets and registration handled directly through Zeffy.</p>
       </div>
 
-      {errorMessage ? (
-        <div class="empty-state">
-          <strong>{errorMessage}</strong>
-          <p>Please use the Zeffy page for the latest event information.</p>
-          <a class="button button-dark" href={zeffyUrl} target="_blank" rel="noreferrer">Open Zeffy events</a>
-        </div>
-      ) : events.length === 0 ? (
-        <div class="empty-state">
-          <strong>No upcoming events are currently listed.</strong>
-          <p>Check back soon or browse the live Manchester Select page on Zeffy.</p>
-          <a class="button button-dark" href={zeffyUrl} target="_blank" rel="noreferrer">Open Zeffy events</a>
-        </div>
-      ) : (
-        <div class="event-list">
-          {events.map((event) => {
-            const start = event.start_date || event.starts_at;
-            const end = event.end_date || event.ends_at;
-            const image = getImage(event);
-            return (
-              <article class="live-event">
-                <div class="date-block">
-                  <span>{start ? formatDate(start).split(' ')[0] : 'Next'}</span>
-                  <strong>{parseDate(start)?.getDate() || '—'}</strong>
-                  <small>{parseDate(start) ? new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(parseDate(start)!) : ''}</small>
+      <div class="event-list" aria-live="polite">
+        {manualEvents.map((event) => {
+          const start = event.start_date || event.starts_at;
+          const end = event.end_date || event.ends_at;
+          const image = getImage(event);
+          return (
+            <article class="live-event">
+              <div class="date-block">
+                <span>{start ? formatDate(start).split(' ')[0] : 'Next'}</span>
+                <strong>{parseDate(start)?.getDate() || '—'}</strong>
+                <small>{parseDate(start) ? new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(parseDate(start)!) : ''}</small>
+              </div>
+              {image ? <img src={image} alt={`${getTitle(event)} event artwork`} loading="lazy" /> : <div class="image-placeholder">Manchester Select</div>}
+              <div class="event-content">
+                <div class="event-meta">
+                  <span>{formatDate(start)}</span>
+                  {formatTime(start) && <span>{formatTime(start)}{end && formatTime(end) ? `–${formatTime(end)}` : ''}</span>}
                 </div>
-                {image ? <img src={image} alt={`${getTitle(event)} event artwork`} loading="lazy" /> : <div class="image-placeholder">Manchester Select</div>}
-                <div class="event-content">
-                  <div class="event-meta">
-                    <span>{formatDate(start)}</span>
-                    {formatTime(start) && <span>{formatTime(start)}{end && formatTime(end) ? `–${formatTime(end)}` : ''}</span>}
-                  </div>
-                  <h3>{getTitle(event)}</h3>
-                  {event.description && <p>{event.description}</p>}
-                  <div class="event-location">{getLocation(event)}</div>
-                </div>
-                <a class="button button-dark" href={getUrl(event)} target="_blank" rel="noreferrer">Tickets / details ↗</a>
-              </article>
-            );
-          })}
-        </div>
-      )}
+                <h3>{getTitle(event)}</h3>
+                {event.description && <p>{event.description}</p>}
+                <div class="event-location">{getLocation(event)}</div>
+              </div>
+              <a class="button button-dark" href={getUrl(event)} target="_blank" rel="noreferrer">Tickets / details ↗</a>
+            </article>
+          );
+        })}
+      </div>
     </div>
   </section>
 
@@ -236,6 +158,108 @@ const getImage = (event: Campaign) => {
       <a class="button button-accent" href={zeffyUrl} target="_blank" rel="noreferrer">Go to Zeffy ↗</a>
     </div>
   </section>
+
+  <script>
+    type Campaign = {
+      id?: string;
+      title?: string;
+      name?: string;
+      description?: string;
+      slug?: string;
+      url?: string;
+      campaign_url?: string;
+      start_date?: string;
+      end_date?: string;
+      starts_at?: string;
+      ends_at?: string;
+      image_url?: string;
+      cover_image_url?: string;
+      location?: string | { name?: string; address?: string };
+    };
+
+    const eventList = document.querySelector('.event-list');
+
+    const escapeHtml = (value: unknown) => String(value ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+
+    const parseDate = (value?: string) => {
+      if (!value) return null;
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? null : date;
+    };
+
+    const formatDate = (value?: string) => {
+      const date = parseDate(value);
+      if (!date) return 'Date to be confirmed';
+      return new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+    };
+
+    const formatTime = (value?: string) => {
+      const date = parseDate(value);
+      return date ? new Intl.DateTimeFormat('en-GB', { hour: 'numeric', minute: '2-digit' }).format(date) : '';
+    };
+
+    const getLocation = (event: Campaign) => {
+      if (typeof event.location === 'string') return event.location;
+      return event.location?.name || event.location?.address || 'Manchester';
+    };
+
+    const getUrl = (event: Campaign) => event.url || event.campaign_url || (event.slug ? `https://www.zeffy.com/en-GB/ticketing/${event.slug}` : 'https://www.zeffy.com/en-GB/organizations/manchester-select');
+    const getTitle = (event: Campaign) => event.title || event.name || 'Manchester Select event';
+    const getImage = (event: Campaign) => event.cover_image_url || event.image_url || 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/logo.png';
+
+    const safeUrl = (value: string) => {
+      if (value.startsWith('/')) return value;
+      try {
+        const url = new URL(value);
+        return url.protocol === 'https:' || url.protocol === 'http:' ? url.href : 'https://www.zeffy.com/en-GB/organizations/manchester-select';
+      } catch {
+        return 'https://www.zeffy.com/en-GB/organizations/manchester-select';
+      }
+    };
+
+    const renderEvents = (events: Campaign[]) => {
+      if (!eventList) return;
+      eventList.innerHTML = events.map((event) => {
+        const start = event.start_date || event.starts_at;
+        const end = event.end_date || event.ends_at;
+        const date = parseDate(start);
+        const image = getImage(event);
+        const title = getTitle(event);
+        const timeStart = formatTime(start);
+        const timeEnd = formatTime(end);
+        return `<article class="live-event">
+          <div class="date-block">
+            <span>${escapeHtml(date ? new Intl.DateTimeFormat('en-GB', { weekday: 'short' }).format(date) : 'Next')}</span>
+            <strong>${escapeHtml(date ? date.getDate() : '—')}</strong>
+            <small>${escapeHtml(date ? new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(date) : '')}</small>
+          </div>
+          <img src="${escapeHtml(safeUrl(image))}" alt="${escapeHtml(title)} event artwork" loading="lazy">
+          <div class="event-content">
+            <div class="event-meta">
+              <span>${escapeHtml(formatDate(start))}</span>
+              ${timeStart ? `<span>${escapeHtml(timeStart)}${timeEnd ? `–${escapeHtml(timeEnd)}` : ''}</span>` : ''}
+            </div>
+            <h3>${escapeHtml(title)}</h3>
+            ${event.description ? `<p>${escapeHtml(event.description)}</p>` : ''}
+            <div class="event-location">${escapeHtml(getLocation(event))}</div>
+          </div>
+          <a class="button button-dark" href="${escapeHtml(safeUrl(getUrl(event)))}" target="_blank" rel="noreferrer">Tickets / details ↗</a>
+        </article>`;
+      }).join('');
+    };
+
+    fetch('/api/events', { headers: { Accept: 'application/json' } })
+      .then((response) => response.ok ? response.json() as Promise<{ events?: Campaign[] }> : Promise.reject(new Error(`Events API returned ${response.status}`)))
+      .then((payload) => {
+        if (Array.isArray(payload.events)) renderEvents(payload.events);
+      })
+      .catch((error) => console.warn('Live Zeffy events unavailable; keeping fallback events.', error));
+  </script>
 
   <style>
     .events-hero{background:var(--navy);color:#fff;padding:96px 0 84px}.hero-row{display:flex;justify-content:space-between;align-items:end;gap:40px}.events-hero h1{font-size:clamp(4rem,9vw,7.5rem);line-height:.86;letter-spacing:-.07em;margin:0 0 25px}.hero-copy{max-width:610px;color:#d4dde2;font-size:1.15rem}.events-section{background:#f0eee8}.event-list{display:grid;gap:16px}.live-event{display:grid;grid-template-columns:92px 240px 1fr auto;align-items:center;gap:24px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;overflow:hidden}.live-event img,.image-placeholder{width:240px;height:170px;object-fit:contain;border-radius:14px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:900}.date-block{text-align:center;border-right:1px solid var(--line);padding:8px 15px}.date-block span{display:block;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:#6c7881;font-weight:900}.date-block strong{display:block;font-size:2.8rem;line-height:1;font-weight:950;letter-spacing:-.06em}.date-block small{display:block;font-weight:900;text-transform:uppercase}.event-meta{display:flex;gap:14px;flex-wrap:wrap;color:#697680;text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;font-weight:900}.event-content h3{font-size:2rem;line-height:1;margin:10px 0}.event-content p{margin:0 0 12px;color:#67747e;max-width:650px}.event-location{font-weight:900;color:#17232d}.empty-state{padding:55px;background:#fff;border:1px solid var(--line);border-radius:20px}.empty-state strong{display:block;font-size:1.5rem;margin-bottom:8px}.empty-state p{color:#67747e;margin:0 0 22px}.cta-section{background:#fff}.cta-card{background:var(--navy);color:#fff;border-radius:28px;padding:50px;display:flex;justify-content:space-between;align-items:center;gap:30px}.cta-card h2{font-size:clamp(3rem,6vw,5rem);line-height:.9;letter-spacing:-.06em;margin:0 0 12px}.cta-card p{color:#cfd9de;max-width:650px;margin:0}.eyebrow{font-weight:950;text-transform:uppercase;letter-spacing:.12em;font-size:.7rem;margin-bottom:14px}@media (max-width:1000px){.live-event{grid-template-columns:80px 190px 1fr}.live-event .button{grid-column:3}.live-event img,.image-placeholder{width:190px;height:150px}}@media (max-width:760px){.hero-row,.cta-card{display:block}.hero-row .button,.cta-card .button{margin-top:25px}.live-event{grid-template-columns:72px 1fr;gap:16px}.live-event img,.image-placeholder{grid-column:2;width:100%;height:190px;order:2}.live-event .event-content{grid-column:2;order:3}.live-event .button{grid-column:2;order:4;justify-self:start}.date-block{grid-row:1 / span 1;border-right:0;border-bottom:1px solid var(--line);padding-bottom:14px}.event-content h3{font-size:1.6rem}.cta-card{padding:34px}}
