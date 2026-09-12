@@ -1,0 +1,11 @@
+.involve-list a,
+.involve-list a:visited,
+.involve-list a:hover,
+.involve-list a:focus-visible,
+.involve-list a .involve-number,
+.involve-list a .involve-copy,
+.involve-list a .involve-copy strong,
+.involve-list a .involve-copy small,
+.involve-list a .involve-arrow {
+  color: #07121d !important;
+}
