@@ -1,0 +1,14 @@
+.involve-list a,
+.involve-list a:visited {
+  color: #ffffff !important;
+}
+
+.involve-list .involve-number,
+.involve-list .involve-copy strong,
+.involve-list .involve-arrow {
+  color: #ffffff !important;
+}
+
+.involve-list .involve-copy small {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
