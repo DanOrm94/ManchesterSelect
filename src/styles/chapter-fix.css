@@ -11,3 +11,7 @@
 .people .eyebrow {
   color: #000 !important;
 }
+
+.sports-grid .eyebrow {
+  display: none;
+}
