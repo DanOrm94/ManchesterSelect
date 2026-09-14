@@ -2,16 +2,6 @@
   display: none;
 }
 
-.hero .eyebrow {
-  color: #fff !important;
-}
-
-.next-chapter .eyebrow,
-.people-section .eyebrow,
-.people .eyebrow {
-  color: #000 !important;
-}
-
-.sports-grid .eyebrow {
-  display: none;
+.eyebrow {
+  display: none !important;
 }
