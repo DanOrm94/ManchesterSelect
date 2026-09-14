@@ -2,6 +2,10 @@
   display: none;
 }
 
-.eyebrow {
+.hero .eyebrow {
   color: #fff !important;
+}
+
+.next-chapter .eyebrow {
+  color: #000 !important;
 }
