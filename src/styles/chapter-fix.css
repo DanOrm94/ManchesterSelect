@@ -5,3 +5,7 @@
 .eyebrow {
   display: none !important;
 }
+
+.hero .eyebrow {
+  display: block !important;
+}
