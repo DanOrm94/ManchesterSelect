@@ -7,7 +7,6 @@ import '../styles/contact-fix.css';
 import '../styles/involve-fix.css';
 import '../styles/chapter-fix.css';
 import '../styles/sponsor-fix.css';
-import '../styles/hero-fix.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
@@ -39,40 +38,5 @@ const canonical = new URL(Astro.url.pathname, 'https://mcrselect.co.uk');
     <main><slot /></main>
     <Footer />
     <CookieBanner />
-    <script is:inline>
-      (() => {
-        const hero = document.querySelector('.hero');
-        if (!hero) return;
-        const content = hero.querySelector('.hero-content');
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const update = () => {
-          const rect = hero.getBoundingClientRect();
-          const travel = Math.max(1, hero.offsetHeight - window.innerHeight);
-          const progress = Math.max(0, Math.min(1, -rect.top / travel));
-          const eased = progress * progress * (3 - 2 * progress);
-          const x = 14 - 14 * eased;
-          const y = 14 - 14 * eased;
-          hero.style.setProperty('--hero-inset-x', `${x}%`);
-          hero.style.setProperty('--hero-inset-y', `${y}%`);
-          if (content && !reduced) {
-            const fade = Math.max(0, Math.min(1, (progress - 0.22) / 0.42));
-            content.style.opacity = `${1 - fade}`;
-            content.style.transform = `translate3d(0, ${-28 * fade}px, 0)`;
-          }
-        };
-        let ticking = false;
-        const onScroll = () => {
-          if (ticking) return;
-          ticking = true;
-          requestAnimationFrame(() => {
-            update();
-            ticking = false;
-          });
-        };
-        update();
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', update);
-      })();
-    </script>
   </body>
 </html>
