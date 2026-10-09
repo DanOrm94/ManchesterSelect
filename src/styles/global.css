@@ -119,7 +119,7 @@ a:hover,.nav-cta:hover{transform:none}}
 1fr}.gallery{grid-template-columns:repeat(2,1fr)}.partner-row{grid-template-columns:1fr
 1fr}.footer-grid{grid-template-columns:1fr
 1fr}.hero{min-height:700px}.hero-content{margin-bottom:90px}.sponsor-card.featured{transform:none}.cookie-banner{display:block}.cookie-actions{margin-top:12px}.nav-shell{min-height:86px}.contact{padding:100px
-0}.contact .story-grid{gap:55px}}
+0}.contact .story-grid{gap:55px}.section-head{flex-direction:column;align-items:start;gap:18px}.section-head .lead{max-width:none!important}}
 @media(max-width:560px){.container,.hero-content,.policy{width:min(100% - 28px)}.section{padding:72px 0}.hero
 h1{font-size:4rem}.hero-copy{font-size:1rem}.sponsor-grid,.footer-grid{grid-template-columns:1fr}.partner-row{grid-template-columns:1fr
 1fr}.brand img{width:145px}.nav-shell{padding:18px 0}.policy{padding-top:68px;padding-bottom:80px}.policy
