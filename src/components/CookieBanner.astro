@@ -6,7 +6,7 @@
 <script>
   const key='ms-cookie-preferences'; const banner=document.querySelector('#cookie-banner'); const dialog=document.querySelector('#cookie-dialog');
   const saved=localStorage.getItem(key); if(!saved && banner) banner.hidden=false;
-  const save=(statistics=false,marketing=false)=>{localStorage.setItem(key,JSON.stringify({essential:true,statistics,marketing})); if(banner) banner.hidden=true;};
+  const save=(statistics=false,marketing=false)=>{const prefs={essential:true,statistics,marketing};localStorage.setItem(key,JSON.stringify(prefs)); if(banner) banner.hidden=true; document.dispatchEvent(new CustomEvent('ms-cookie-change',{detail:prefs}));};
   document.querySelector('#cookie-essential')?.addEventListener('click',()=>save());
   document.querySelector('#cookie-accept')?.addEventListener('click',()=>save(true,true));
   document.querySelector('#cookie-settings')?.addEventListener('click',()=>dialog?.showModal());
