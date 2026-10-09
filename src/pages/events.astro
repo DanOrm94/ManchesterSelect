@@ -123,6 +123,8 @@ const getImage = (event: Campaign) => event.cover_image_url || event.image_url |
           const start = event.start_date || event.starts_at;
           const end = event.end_date || event.ends_at;
           const image = getImage(event);
+          const endOrStart = parseDate(end) || parseDate(start);
+          const isPast = endOrStart ? endOrStart.getTime() < Date.now() : false;
           return (
             <article class="live-event">
               <div class="date-block">
@@ -133,7 +135,7 @@ const getImage = (event: Campaign) => event.cover_image_url || event.image_url |
               {image ? <img class={image === eventLogo ? 'event-logo' : ''} src={image} alt={`${getTitle(event)} event artwork`} loading="lazy" /> : <div class="image-placeholder">Manchester Select</div>}
               <div class="event-content">
                 <div class="event-meta">
-                  <span class="event-status">Previous</span>
+                  <span class="event-status">{isPast ? 'Previous' : 'Upcoming'}</span>
                   <span>{formatDate(start)}</span>
                   {formatTime(start) && <span>{formatTime(start)}{end && formatTime(end) ? `–${formatTime(end)}` : ''}</span>}
                 </div>

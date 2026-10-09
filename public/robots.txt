@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://manchesterselect.co.uk/sitemap.xml
+Sitemap: https://mcrselect.co.uk/sitemap.xml
