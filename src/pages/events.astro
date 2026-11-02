@@ -24,7 +24,19 @@ type Campaign = {
   location?: string | { name?: string; address?: string };
 };
 
+const mcfcBadge = 'https://raw.githubusercontent.com/DanOrm94/ManchesterSelect/main/Manchester_City_FC_badge.png';
+
 const manualEvents: Campaign[] = [
+  {
+    id: 'mcfc-fulham-hospitality-manual',
+    title: 'Man City vs Fulham – 4x Full Hospitality Tickets',
+    description: 'Win 4x full hospitality tickets to Manchester City vs Fulham at the Etihad Stadium. Enjoy a premium matchday experience in support of Manchester Select.',
+    url: 'https://www.zeffy.com/en-GB/ticketing/mcfc-vs-fulham-4x-full-hospitality-tickets--211126',
+    type: 'event',
+    start_date: '2026-11-21T12:30:00+00:00',
+    location: 'Etihad Stadium, Manchester',
+    cover_image_url: mcfcBadge,
+  },
   {
     id: 'christie-cup-manual',
     title: 'Christie Cup',
